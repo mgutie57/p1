@@ -1,169 +1,110 @@
-//Updated p1 code
+//waves
+var wavesQu = 20;
+var yoff = []; 
+var offset = []; 
+var offsetDist = 30;
 
-//p1 update separate classes
-let bgColor = 0;
-let circleColor = 0;
-let squareColor = 0;
+var boats = [];
 
-particles = [];
-
-// circles + text random move random color
-function setup() { 
-    createCanvas(600, 400); 
-    bgColor = color(random(190), random(20), random(20));
-	circleColor = color(random(255), random(255), random(255));
-	squareColor = color(random(255), random(255), random(255));
-
-    a1 = new Circles(random(width),(random(height))); 
-    a2 = new Circles(random(width),(random(height))); 
-    a3 = new Circles(random(width),(random(height))); 
-
-    c1 = new Squares(random(width),(random(height)));
-    c2 = new Squares(random(width),(random(height)));
-    c3 = new Squares(random(width),(random(height)));
-  } 
-   
-  function draw() { 
-    background(bgColor); 
-
-   
-    a1.display();  a1.move(); 
-    a2.display();  a2.move(); 
-    a3.display();  a3.move();   
-
-    c1.display();  c1.move(); 
-    c2.display();  c2.move(); 
-    c3.display();  c3.move();  
-
-    //density towards bottom/beginning of particles
-    for (let i = 0; i < 4; i = i + 1) {
-    let p = new Particle();
-    particles.push(p);
-  }
-    //"smoothness" of particle release and quickness start
-  for (let i = particles.length - 1; i >= 0; i = i - 1) {
-      particles[i].update();
-      particles[i].show();
-    
-        if (particles[i].finished()) {
-          particles.splice(i, 0.5);
-    }
-  }
- } 
-   
-   
-  class Circles{ 
-  constructor(tempx,tempy){ 
-   
-     //circles x 
-    this.x=tempx; 
-    this.y=tempy;
-     
-    this.r=40;
-    this.xspeed = random(4); 
-    this.yspeed = random(4);
-      
-    this.xdirection = random(3); 
-    this.ydirection = random(3);
-  } 
-   
-    display(){ 
-        noStroke(); 
-        ellipse(this.x, this.y, this.r); 
-        fill(circleColor);
-        
-    } 
-    
-    move(){ 
-   
-      this.x = this.x + this.xspeed * this.xdirection 
-      this.y = this.y + this.yspeed * this.ydirection 
-      
-         //bounceback
-      if (this.x > width || this.x < 0){
-               this.xdirection =- this.xdirection; 
-      } 
-      if (this.y > height || this.y <0){ 
-            this.ydirection =- this.ydirection; 
-      } 
-  }   
+function setup() {
+  createCanvas(800, 500);
+  
+  //water
+  for(var a = 0; a <= wavesQu; a = a + 1) {
+    offset[a] = a * offsetDist;
+    yoff[a] = random(50);
+	}
+  
+  // colors
+  colorWaves = color (random (10,90), random (80,120), random (150,200), (20,50)); 
+  colorBoats = color(140, 85, 20);
+  colorSails = color(220);
+  colorBg = color(0,30,70)
+  
 }
 
-class Squares{ 
-    constructor(tempc,tempd){ 
-     
-       //squares c d
-      this.c=tempc; 
-      this.d=tempd;
+function draw() {
+	background (colorBg); 
+  
+  //sky + its color 
+    cSk1 = color(0, 16, 18, 150);
+	cSk2 = color(4, 60, 66, 5);	
+	sky(0, 0, width, height/2, cSk1, cSk2);
+  
+  //waves 
+	fill(colorWaves); 
+	for(var a = 0; a < wavesQu; a = a + 1) {
+		noiseWave(yoff[a], offset[a]);
+		yoff[a] += 0.0055; // Increment y_dimension for noise
       
-      this.sqSize = random(20,80);
-      this.cspeed= random(4); 
-      this.dspeed= random(4);
-       
-      this.cdirection=random(3); 
-      this.ddirection=random(3);
-    } 
-     
-      display(){ 
-          noStroke(); 
-          square(this.c, this.d, this.sqSize);
-          fill(squareColor);
+	}
+  
+  //boats
+  for (let b = 0; b < boats.length; b = b + 1) {
+    boats[b].fly();
+    boats[b].display();
+  } 
+}
 
-      } 
 
-      move(){ 
-     
-        this.c = this.c + this.cspeed * this.cdirection 
-        this.d = this.d + this.dspeed * this.ddirection       
-         
-        //bounceback
-        if (this.c > width || this.c < 0){
-          this.cdirection =- this.cdirection; 
-        } 
-        if (this.d > height || this.d <0){ 
-          this.ddirection =- this.ddirection; 
-        } 
-    } 
-    
+function sky(x, y, w, h, c1, c2) {
+	noFill();
+  for (var sk = y; sk <= y + h; sk = sk + 1) {
+      var inter = map(sk, y, y + h, 0, 1);
+      var cSky = lerpColor(c1, c2, inter);
+      stroke(cSky);
+      line(x, sk, x + w, sk);
   }
-class Particle {
-  constructor() {
-    this.a = random(width); //random emit spanning widith of screen
-    this.b = height; //emit spanning height of s
-    this.va = random(-2, 1);
-    this.vb = random(-5, -1.5);
-    this.alpha = 255;
-    this.diam = random(10,17);
-  }
+}
 
-  finished() {
-    return this.alpha < 0;
-  }
+//waves
+function noiseWave(yoff, offset) {
+  beginShape();
+    this.xoff = 0;
+    for (var x = 0; x <= width; x = x + 12) {  
+      this.y = map(noise(this.xoff, yoff), 0, 1, height / 4  + offset, height/2 + offset);   
+      vertex(x, this.y); 
+      xoff += 0.05;
+    }
+    vertex(width * 3, height);
+    vertex(-width * 3, height);
+  endShape(CLOSE);
+}
 
-  update() {
-    this.a = this.a + this.va;
-    this.b = this.b + this.vb;
-    this.alpha = this.alpha - 3;
-    this.diam = this.diam - random(0.1, 0.5);
+class Boat {
+  constructor(e, f) {
+    this.e = e;
+    this.f = random(height * 0.05, height * 0.4);
+  }
+  
+  fly() {
+    this.e = this.e + 0.85;
+    this.f = this.f + -0.2;
   }
 
-  show() {
-    noStroke();
-    fill(random(200,230), random(50, 150), 10, this.alpha);
-    ellipse(this.a, this.b, this.diam);
+  display() {
+    {
+      //bottom
+      fill(colorBoats);
+      quad(this.e, -5 + this.f, this.e + 5, this.f, this.e + 30, this.f, this.e + 40, -5 + this.f) 
+      //sail
+       fill(colorSails);
+      triangle(this.e + 8, -25 + this.f, this.e + 10, -4 + this.f, this.e + 30, -4 + this.f);
+    }
   }
+}
+
+function mousePressed() {
+  let b = new Boat(-15, random(0,height));
+  boats.push(b);
 }
 
 function keyPressed(){
   if (keyCode === LEFT_ARROW){ 
-    bgColor = color(random(130), random(20), random(20));
-  }  
-  else if (keyCode === UP_ARROW){
-    circleColor = color(random(255), random(255), random(255));
-  }
-   else if (keyCode === DOWN_ARROW){
-   squareColor = color(random(255), random(255), random(255));  
-    
-    
-  }
+  colorWaves = color (random (10,90), random (90,160), random (90,190), (10,50)); 
+  }  else if (keyCode === UP_ARROW){
+    colorBoats = color (random (100,255), random (50,130), random (50,130));
+  }else if (keyCode === RIGHT_ARROW){
+    colorBg = color (random (10,50), random (10,50), random (40,110));
+}
 }
