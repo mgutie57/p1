@@ -1,2 +1,6 @@
 # p1
 this is project 1
+
+There was a lot of back and forth on this project as I tried to learn how to do many things; I would do one thing- scrap it- and start on another. Initially my focus was on bouncing objects, a simple concept, then somehow fire made its way in there.
+But I finally settled on what you see here: waves and boats. I kept my initial idea of simple-looking moving objects floating on the screen, but did boats that are "flying" instead- they are meant to resemble birds. I switched to waves when I decided not to use fire because the movement is also rhythmic and unpredictable, I went with a color scheme that resembles water but kept it with darker tones to reflect a calmer, quieter state. Similar to the waves' color scheme, my sky's color scheme remained dark and muted to reflect the calmness of nighttime- but the range selected for use of the "right" key is also meant to give the vibes of completely different environments, hence the occasional greens and reds. For the boat birds, I gave the option of changing colors of the boats with brigther colors- although not neon-like- so it would stand out against the darkness and nearly monochromatic scheme of its environment; the sails were kept near-white so as to keep the traditional image of a sailboat.
+
