@@ -1,3 +1,6 @@
+window.alert("Press the left arrow button to change the color of the waves.  Press the right arrow to change the color of the sky.");
+window.alert("Click mouse to generate a boat bird.  Press the up arrow to change the color of the boat birds.");
+
 //waves
 var wavesQu = 20;
 var yoff = []; 
@@ -7,7 +10,7 @@ var offsetDist = 30;
 var boats = [];
 
 function setup() {
-  createCanvas(800, 500);
+  createCanvas(900, 600);
   
   //water
   for(var a = 0; a <= wavesQu; a = a + 1) {
